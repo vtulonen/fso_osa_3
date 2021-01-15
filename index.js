@@ -73,7 +73,7 @@ const generateId = () => {
 // POST add person
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  console.log(body);
+
   if (!body.name) {
     return res.status(400).json({
       error: "name missing",
@@ -84,13 +84,20 @@ app.post("/api/persons", (req, res) => {
     });
   }
 
+  const alreadyIn = persons.find((person) => person.name === body.name)
+    ? true
+    : false;
+
+  if (alreadyIn)
+    return res.status(400).json({
+      error: "name provided already in the phonebook",
+    });
+
   const person = {
     name: body.name,
     number: body.number,
     id: generateId(),
   };
-
-  console.log(person);
 
   persons = persons.concat(person);
 
