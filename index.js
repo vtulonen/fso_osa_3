@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cors = require('cors')
 
+app.use(cors())
 app.use(express.json());
 
 morgan.token("postData", function (req, res) {
@@ -43,6 +45,11 @@ let persons = [
     name: "Mary Poppendieck",
     number: "39-23-6423122",
     id: 4,
+  },
+  {
+    name: "Test",
+    number: "33",
+    id: 5,
   },
 ];
 
