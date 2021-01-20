@@ -37,8 +37,9 @@ if (process.argv.length === 5) {
 } else if (process.argv.length === 3) {
   // Show all
   Person.find({}).then((res) => {
+    console.log('Phonebook:');
     res.forEach((item) => {
-      console.log(item);
+      console.log(item.name, item.number);
     });
     mongoose.connection.close();
     process.exit(1);
