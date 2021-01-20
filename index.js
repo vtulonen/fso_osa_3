@@ -1,9 +1,12 @@
+require("dotenv").config();
+const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+const Person = require("./models/person");
 
-app.use(express.static('build'))
+app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
 
@@ -26,34 +29,6 @@ app.use(
   })
 );
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2,
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4,
-  },
-  {
-    name: "Test",
-    number: "33",
-    id: 5,
-  },
-];
-
 // INFO
 app.get("/info", (req, res) => {
   const personAmount = persons.length;
@@ -68,7 +43,10 @@ app.get("/info", (req, res) => {
 
 // GET ALL
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    console.log(persons);
+    res.json(persons);
+  });
 });
 
 // GET BY ID
