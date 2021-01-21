@@ -73,7 +73,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
 });
 
 // POST add person
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
 
   if (!body.name) {
@@ -99,6 +99,21 @@ app.post("/api/persons", (req, res) => {
     .catch((error) => next(error));
 });
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
+})
+
 const unknownEndpoint = (req, res) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
@@ -107,6 +122,7 @@ app.use(unknownEndpoint);
 
 const errorHandler = (error, req, res, next) => {
   console.error(error.message);
+  console.log(error);
 
   if (error.name === "CastError" && error.kind == "ObjectId") {
     return res.status(400).send({ error: "invalid id" });
