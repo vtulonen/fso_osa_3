@@ -30,14 +30,14 @@ app.use(
 
 // INFO
 app.get("/info", (req, res) => {
-  const personAmount = persons.length;
-  const date = new Date();
-  res.send(
-    `
-      <p>Phonebook has ${personAmount} persons in it. </p>
-      <p>${date}</p>
-    `
-  );
+  Person.countDocuments({}).then((count) => {
+    res.send(
+      `
+        <p>Phonebook has ${count} persons in it. </p>
+        <p>${new Date()}</p>
+      `
+    );
+  });
 });
 
 // GET ALL
@@ -51,16 +51,15 @@ app.get("/api/persons", (req, res) => {
 
 // GET BY ID
 app.get("/api/persons/:id", (req, res, next) => {
-  const id = Number(req.params.id);
-  const person = persons.find((person) => {
-    return person.id === id;
-  });
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 // DELETE
@@ -99,23 +98,23 @@ app.post("/api/persons", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-app.put('/api/persons/:id', (req, res, next) => {
-  const body = req.body
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
 
   const person = {
     name: body.name,
     number: body.number,
-  }
+  };
 
   Person.findByIdAndUpdate(req.params.id, person, { new: true })
-    .then(updatedPerson => {
-      res.json(updatedPerson.toJSON())
+    .then((updatedPerson) => {
+      res.json(updatedPerson.toJSON());
     })
-    .catch(error => next(error))
-})
+    .catch((error) => next(error));
+});
 
 const unknownEndpoint = (req, res) => {
-  response.status(404).send({ error: "unknown endpoint" });
+  res.status(404).send({ error: "unknown endpoint" });
 };
 
 app.use(unknownEndpoint);

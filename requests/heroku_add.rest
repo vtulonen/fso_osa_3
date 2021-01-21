@@ -1,7 +1,0 @@
-POST https://sheltered-harbor-22344.herokuapp.com/api/persons
-Content-Type: application/json
-
-{
-    "name": "deployed to heroku test",
-    "number": "200"
-}

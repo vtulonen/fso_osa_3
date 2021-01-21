@@ -1,1 +1,0 @@
-DELETE https://sheltered-harbor-22344.herokuapp.com/api/persons/5
